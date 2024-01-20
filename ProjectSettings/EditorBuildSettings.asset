@@ -14,7 +14,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LoseScene.unity
     guid: a7af3495596d25347a67e8d5282da54c
-  - enabled: 1
-    path: Assets/Scenes/Options.unity
-    guid: b1776585226850d40a18998c7095f871
   m_configObjects: {}
