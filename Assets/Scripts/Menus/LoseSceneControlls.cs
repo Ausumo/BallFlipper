@@ -9,19 +9,52 @@ public class LoseSceneControlls : MonoBehaviour
 {
     [SerializeField] private TMP_Text _scoreText;
 
-    private void Start()
+	[SerializeField]
+	private TMP_Text _highscoreText;
+
+	private AudioManager _audioManager;
+
+	private void Start()
     {
-        var score = PlayerPrefs.GetInt("scoreCount");
-        _scoreText.text = score.ToString();
-    }
+		_audioManager = GameObject.FindGameObjectWithTag("AudioManager").gameObject.GetComponent<AudioManager>();
+		//Play Menu Music
+
+		var score = PlayerPrefs.GetInt("scoreCount");
+
+		if (score > GameManager.Instance.Highscore)
+        {
+			GameManager.Instance.Highscore = score;
+			GameManager.Instance.SaveHighscore();
+		}
+
+		_scoreText.text = "Score: " + score;
+        _highscoreText.text = "Highscore: " + GameManager.Instance.Highscore;
+	}
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(1);
+		AudioManager.Instance.PlaySound("button");
+		SceneManager.LoadScene(1);
     }
 
     public void QuitToMenu()
     {
-        SceneManager.LoadScene(0);
+		AudioManager.Instance.PlaySound("button");
+		SceneManager.LoadScene(0);
     }
+
+	public void PlaySound(string soundName)
+	{
+		_audioManager.PlaySound(soundName);
+	}
+
+	public void PlayMusic(string musicName)
+	{
+		_audioManager.PlayMusic(musicName);
+	}
+
+	public void StopMusic(string musicName)
+	{
+		_audioManager.StopMusic(musicName);
+	}
 }

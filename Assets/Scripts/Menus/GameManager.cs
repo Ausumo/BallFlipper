@@ -4,7 +4,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public float masterVolume;
+    public int Highscore;
 
     private void Awake()
     {
@@ -41,4 +41,16 @@ public class GameManager : MonoBehaviour
 
         AudioManager.Instance.SetVolumes();
     }
+
+    public void SaveHighscore()
+    {
+		PlayerPrefs.SetInt("Highscore", Highscore);
+
+		PlayerPrefs.Save();
+	}
+
+    public void LoadHighscore()
+    {
+        Highscore = PlayerPrefs.GetInt("Highscore");
+	}
 }

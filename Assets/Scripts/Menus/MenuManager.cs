@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
+using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
@@ -23,16 +24,27 @@ public class MenuManager : MonoBehaviour
     [SerializeField]
     private Slider _soundsVolumeSlider;
 
-    private void Awake()
+	[SerializeField]
+	private TMP_Text _highscoreText;
+
+	private AudioManager _audioManager;
+
+	private void Awake()
     {
         Instance = this;
     }
 
     private void Start()
     {
+        //Play Main menu Music
+
+        GameManager.Instance.LoadHighscore();
         GameManager.Instance.LoadOptions();
         UpdateSliderFromVolume();
-    }
+        _highscoreText.text = "Highscore: " + GameManager.Instance.Highscore;
+
+		_audioManager = GameObject.FindGameObjectWithTag("AudioManager").gameObject.GetComponent<AudioManager>();
+	}
 
     public void StartGame()
     {
@@ -104,6 +116,21 @@ public class MenuManager : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+		Application.Quit();
     }
+
+	public void PlaySound(string soundName)
+	{
+		_audioManager.PlaySound(soundName);
+	}
+
+	public void PlayMusic(string musicName)
+	{
+		_audioManager.PlayMusic(musicName);
+	}
+
+	public void StopMusic(string musicName)
+	{
+		_audioManager.StopMusic(musicName);
+	}
 }

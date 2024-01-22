@@ -21,6 +21,7 @@ public class BallEventsController : MonoBehaviour
             _score++;
             _scoreText.text = _score.ToString();
             Destroy(collision.gameObject);
+            //AudioManager.Instance.PlaySound("bonus");
         }
 
         if (collision.gameObject.CompareTag("Enemy"))

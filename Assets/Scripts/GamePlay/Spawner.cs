@@ -13,6 +13,8 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
+        //Play Game Music
+
         StartCoroutine(SpawnEnemy());
         StartCoroutine(SpawnBonus());
     }
