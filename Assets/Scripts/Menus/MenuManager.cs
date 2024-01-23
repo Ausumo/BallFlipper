@@ -36,8 +36,6 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
-        //Play Main menu Music
-
         GameManager.Instance.LoadHighscore();
         GameManager.Instance.LoadOptions();
         UpdateSliderFromVolume();
