@@ -17,7 +17,8 @@ public class LoseSceneControlls : MonoBehaviour
 	private void Start()
     {
 		_audioManager = GameObject.FindGameObjectWithTag("AudioManager").gameObject.GetComponent<AudioManager>();
-		//Play Menu Music
+
+		PlayMusic("menuMusic");
 
 		var score = PlayerPrefs.GetInt("scoreCount");
 
@@ -33,13 +34,14 @@ public class LoseSceneControlls : MonoBehaviour
 
     public void RestartGame()
     {
-		AudioManager.Instance.PlaySound("button");
+		PlaySound("button");
 		SceneManager.LoadScene(1);
     }
 
     public void QuitToMenu()
     {
-		AudioManager.Instance.PlaySound("button");
+		PlaySound("button");
+		StopMusic("menuMusic");
 		SceneManager.LoadScene(0);
     }
 

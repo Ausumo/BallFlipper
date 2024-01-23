@@ -14,20 +14,29 @@ public class BallEventsController : MonoBehaviour
     {
         _score = 0;
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+	private void Start()
+	{
+		AudioManager.Instance.PlayMusic("gameMusic");
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Bonus"))
         {
             _score++;
             _scoreText.text = _score.ToString();
             Destroy(collision.gameObject);
-            //AudioManager.Instance.PlaySound("bonus");
+
+            AudioManager.Instance.PlaySound("collect");
         }
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
             PlayerPrefs.SetInt("scoreCount", _score);
             SceneManager.LoadScene(2);
-        }
+
+			AudioManager.Instance.PlaySound("fail");
+		}
     }
 }

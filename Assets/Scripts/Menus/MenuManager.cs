@@ -44,6 +44,8 @@ public class MenuManager : MonoBehaviour
         _highscoreText.text = "Highscore: " + GameManager.Instance.Highscore;
 
 		_audioManager = GameObject.FindGameObjectWithTag("AudioManager").gameObject.GetComponent<AudioManager>();
+
+		PlayMusic("menuMusic");
 	}
 
     public void StartGame()
