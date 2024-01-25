@@ -10,6 +10,8 @@ public class BallEventsController : MonoBehaviour
     [SerializeField] private int _score;
     [SerializeField] private TextMeshProUGUI _scoreText;
 
+    [SerializeField] private ParticleSystem _playerParticleSystem;
+
     private void Awake()
     {
         _score = 0;
@@ -27,6 +29,8 @@ public class BallEventsController : MonoBehaviour
             _score++;
             _scoreText.text = _score.ToString();
             Destroy(collision.gameObject);
+
+            _playerParticleSystem.Play();
 
             AudioManager.Instance.PlaySound("collect");
         }
