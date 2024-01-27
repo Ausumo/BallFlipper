@@ -60,5 +60,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a58147f1c7c49c44cbf7ec554651824d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _androidAdUnitId: Interstitial_Android
-  _iOsAdUnitId: Interstitial_iOS
+  _androidAdUnitId: AndroidTest
+  _iOsAdUnitId: IosTest

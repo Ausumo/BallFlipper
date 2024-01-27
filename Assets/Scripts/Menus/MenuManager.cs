@@ -119,6 +119,16 @@ public class MenuManager : MonoBehaviour
 		Application.Quit();
     }
 
+    public void OpenAGB()
+    {
+        Application.OpenURL("https://www.riftstonegames.com/");
+	}
+
+	public void OpenPrivacyPolicy()
+	{
+		Application.OpenURL("https://www.riftstonegames.com/");
+	}
+
 	public void PlaySound(string soundName)
 	{
 		_audioManager.PlaySound(soundName);
