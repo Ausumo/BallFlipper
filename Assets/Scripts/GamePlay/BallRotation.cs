@@ -8,8 +8,8 @@ public class BallRotation : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Rotate(0, 0, _speed * Time.deltaTime);
-    }
+		transform.Rotate(0, 0, _speed * Time.deltaTime);
+	}
 
     public void ChangeDirection()
     {

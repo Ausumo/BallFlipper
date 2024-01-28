@@ -121,12 +121,12 @@ public class MenuManager : MonoBehaviour
 
     public void OpenAGB()
     {
-        Application.OpenURL("https://www.riftstonegames.com/");
+        Application.OpenURL("https://www.riftstonegames.com/TermsEULA_App_.html");
 	}
 
 	public void OpenPrivacyPolicy()
 	{
-		Application.OpenURL("https://www.riftstonegames.com/");
+		Application.OpenURL("https://www.riftstonegames.com/PrivacyPolicy_App_.html");
 	}
 
 	public void PlaySound(string soundName)
