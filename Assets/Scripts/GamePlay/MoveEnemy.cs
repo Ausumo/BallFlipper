@@ -8,6 +8,11 @@ public class MoveEnemy : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Move();
+    }
+
+    private void Move()
+    {
         transform.Translate(_moveSpeed * Time.deltaTime, 0, 0);
     }
 }
