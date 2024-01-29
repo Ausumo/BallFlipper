@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 
     public int Highscore;
 
+    private int _firstStart = 0;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -21,6 +23,20 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        _firstStart = PlayerPrefs.GetInt("FirstStart");
+
+		if (_firstStart == 0)
+        {
+			AudioManager.Instance.masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+			AudioManager.Instance.musicVolume = PlayerPrefs.GetFloat("MusicVolume");
+			AudioManager.Instance.soundsVolume = PlayerPrefs.GetFloat("SoundVolume");
+
+            _firstStart = 1;
+            PlayerPrefs.SetInt("FirstStart", _firstStart);
+
+			PlayerPrefs.Save();
+		}
+
         LoadOptions();
     }
 
