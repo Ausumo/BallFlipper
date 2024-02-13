@@ -1,10 +1,8 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using Unity.VisualScripting;
 using UnityEngine.UI;
-using UnityEngine.Audio;
-using UnityEngine.Rendering;
 using TMPro;
+using Dan.Main;
 
 public class MenuManager : MonoBehaviour
 {
@@ -36,7 +34,8 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.LoadHighscore();
+		GameManager.Instance.LoadUsername();
+		GameManager.Instance.LoadHighscore();
         GameManager.Instance.LoadOptions();
         UpdateSliderFromVolume();
         _highscoreText.text = "Highscore: " + GameManager.Instance.Highscore;
@@ -111,13 +110,17 @@ public class MenuManager : MonoBehaviour
 
         _masterVolumeSlider.value = masterVolume;
         _musicVolumeSlider.value = musicVolume;
-        _soundsVolumeSlider.value = soundVolume;
-    }
+		_soundsVolumeSlider.value = soundVolume;
+	}
+	public void DeletePlayerPrefs()
+	{
 
-    public void QuitGame()
-    {
+		PlayerPrefs.DeleteAll();
+	}
+	public void QuitGame()
+	{
 		Application.Quit();
-    }
+	}
 
     public void OpenAGB()
     {
