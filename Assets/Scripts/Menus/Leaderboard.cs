@@ -8,7 +8,7 @@ public class Leaderboard : MonoBehaviour
     [SerializeField] private List<TMP_Text> _nameList;
 	[SerializeField] private List<TMP_Text> _scoreList;
 
-    private string _publicLeaderboardKey = "1b0d7112951b1bd64bd66f0e84bb05a6f6d7dbd2f0ddb162d0fa88d2c28e5271";
+    private string _publicLeaderboardKey = "befb25a6bfb1784dcde5cb791e2ad5b862d485ecd38c8351c06cbb39144b556f";
 
 	private void Start()
 	{
