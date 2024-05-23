@@ -160,7 +160,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.Riftstone.BallFlipper2
+    Android: com.Riftstone.BallFlipper
     iPhone: com.RiftstoneGames.Ball-Flipper
   buildNumber:
     Standalone: 0
@@ -262,8 +262,8 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: '{inproject}: Builds/user.keystore'
-  AndroidKeyaliasName: riftstone
+  AndroidKeystoreName: C:/Users/score/Desktop/RifststoneGames/keystore/user.keystore
+  AndroidKeyaliasName: ballflipper
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
