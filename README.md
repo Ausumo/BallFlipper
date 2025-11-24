@@ -1,6 +1,8 @@
 Ball Flipper 🎮
 Ball Flipper was my very first mobile game and marked the beginning of my journey into mobile game development.
 
+Play it now: https://riftstonegames.itch.io/ballflipper
+
 Origin ✨
 The idea came from my desire to create a simple yet challenging game that reflected my first steps as a developer.
 Ball Flipper was a learning project where I explored the fundamentals of mobile development and experienced the
