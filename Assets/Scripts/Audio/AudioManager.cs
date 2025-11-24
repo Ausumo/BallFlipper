@@ -4,23 +4,34 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
-    public Sound[] musicSounds, sfxSounds;
+    //Sound arrays for music and sound effects
+    [Tooltip("Background music sounds collection")]
+    public Sound[] MusicSounds;
 
-    public AudioSource musicSource, sfxSource;
+    [Tooltip("Gameplay / UI sound effects collection")]
+    public Sound[] SfxSounds;
 
-    //MasterMixer
+    //Audio sources for playing music and sound effects
+    [Tooltip("Audio source used for background music (single source)")]
+    public AudioSource MusicSource;
+
+    [Tooltip("Audio source used for one-shot sound effects")]
+    public AudioSource SfxSource;
+
+    //Mixer settings
+    [Header("Mixer")]
     [SerializeField]
-    private AudioMixer Master;
+    private AudioMixer masterMixer;
 
-    //All Audio Mixer - Master - All Music and Sounds
+    // Mixer exposed parameters expect decibel values. We store normalized 0..1 values here.
     [Range(0.0001f, 1f)]
-    public float masterVolume;
-    //Music - Background
+    public float MasterVolume = 1f;
+
     [Range(0.0001f, 1f)]
-    public float musicVolume;
-    //Sounds - Gameplay 
+    public float MusicVolume = 1f;
+
     [Range(0.0001f, 1f)]
-    public float soundsVolume;
+    public float SoundsVolume = 1f;
 
     public static AudioManager Instance { get; private set; }
 
@@ -29,98 +40,103 @@ public class AudioManager : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-
     /// <summary>
-    /// Spielt Music ab
+    /// Plays a background music by name. Replaces the clip on the music source.
     /// </summary>
-    /// <param name="name"></param>
     public void PlayMusic(string name)
     {
-        Sound music = Array.Find(musicSounds, m => m.name == name);
+        var music = Array.Find(MusicSounds, m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
 
-        if (music == null)
+        if (music == null || music.Clip == null)
         {
-            Debug.Log($"Music '{name}' not found");
+            Debug.LogWarning($"Music '{name}' not found or has no clip.");
+            return;
         }
-        else
-        {
-            musicSource.clip = music.clip;
-            musicSource.Play();
-        }
+
+        MusicSource.clip = music.Clip;
+        MusicSource.Play();
     }
 
     /// <summary>
-    /// Stoppt die aktive Music 
+    /// Stops the currently playing music (if the named clip matches the current clip).
+    /// If the name does not match the current clip, still stops the music.
     /// </summary>
-    /// <param name="name"></param>
-    public void StopMusic(string name)
+    public void StopMusic(string name = null)
     {
-        Sound music = Array.Find(musicSounds, m => m.name == name);
+        if (!string.IsNullOrEmpty(name))
+        {
+            var music = Array.Find(MusicSounds, m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (music == null)
+            {
+                Debug.LogWarning($"Music '{name}' not found.");
+                return;
+            }
+        }
 
-        if (music == null)
-        {
-            Debug.Log($"Music '{name}' not found");
-        }
-        else
-        {
-            musicSource.clip = music.clip;
-            musicSource.Stop();
-        }
+        MusicSource.Stop();
     }
 
     /// <summary>
-    /// SPielt einen Sound ab
+    /// Plays a one-shot sound effect by name.
     /// </summary>
-    /// <param name="name"></param>
     public void PlaySound(string name)
     {
-        Sound sound = Array.Find(sfxSounds, s => s.name == name);
+        var sound = Array.Find(SfxSounds, s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
 
-        if (sound == null)
+        if (sound == null || sound.Clip == null)
         {
-            Debug.Log($"Sound '{name}' not found");
+            Debug.LogWarning($"Sound '{name}' not found or has no clip.");
+            return;
         }
-        else
-        {
-            sfxSource.PlayOneShot(sound.clip);
-        }
+
+        SfxSource.PlayOneShot(sound.Clip);
     }
 
     /// <summary>
-    /// Stoppt den aktiven SOund
+    /// Stops the sound source playback. This only stops the clip currently assigned to the SFX source.
     /// </summary>
-    /// <param name="name"></param>
-    public void StopSound(string name)
+    public void StopSound(string name = null)
     {
-        Sound sound = Array.Find(sfxSounds, s => s.name == name);
+        if (!string.IsNullOrEmpty(name))
+        {
+            var sound = Array.Find(SfxSounds, s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (sound == null)
+            {
+                Debug.LogWarning($"Sound '{name}' not found.");
+                return;
+            }
+        }
 
-        if (sound == null)
-        {
-            Debug.Log($"Sound '{name}' not found");
-        }
-        else
-        {
-            sfxSource.clip = sound.clip;
-            sfxSource.Stop();
-        }
+        SfxSource.Stop();
     }
 
     /// <summary>
-    /// Wird von der Update Methode ausgeführt und hält alle Volumes aktuell
+    /// Applies the current normalized volumes to the AudioMixer in decibels.
+    /// Uses a small lower bound to avoid Log10(0) errors.
     /// </summary>
-    public void SetVolumes()
+    public void ApplyVolumes()
     {
-        Master.SetFloat("MasterVolume", Mathf.Log10(masterVolume) * 20);
-        Master.SetFloat("MusicVolume", Mathf.Log10(musicVolume) * 20);
-        Master.SetFloat("SoundsVolume", Mathf.Log10(soundsVolume) * 20);
+        // Clamp values to valid range and avoid zero
+        MasterVolume = Mathf.Clamp(MasterVolume, 0.0001f, 1f);
+        MusicVolume = Mathf.Clamp(MusicVolume, 0.0001f, 1f);
+        SoundsVolume = Mathf.Clamp(SoundsVolume, 0.0001f, 1f);
+
+        if (masterMixer == null)
+        {
+            Debug.LogWarning("Master mixer reference is missing. Cannot apply volumes.");
+            return;
+        }
+
+        masterMixer.SetFloat("MasterVolume", Mathf.Log10(MasterVolume) * 20f);
+        masterMixer.SetFloat("MusicVolume", Mathf.Log10(MusicVolume) * 20f);
+        masterMixer.SetFloat("SoundsVolume", Mathf.Log10(SoundsVolume) * 20f);
     }
 }
 

@@ -2,48 +2,58 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Dan.Main;
 
+/// <summary>
+/// Responsible for handling menu navigation and UI controls available in menus.
+/// Connects UI sliders to the AudioManager and exposes helper methods for buttons.
+/// </summary>
 public class MenuManager : MonoBehaviour
 {
-    [SerializeField] private Menu[] _menus;
-
-     public static MenuManager Instance { get; private set; }
-
-    //Master Volume Slider
     [SerializeField]
-    private Slider _masterVolumeSlider;
+    private Menu[] menus;
 
-    //Music Volume Slider
+    public static MenuManager Instance { get; private set; }
+
+    [Header("Audio Sliders")]
     [SerializeField]
-    private Slider _musicVolumeSlider;
+    private Slider masterVolumeSlider;
 
-    //Master Volume Slider
     [SerializeField]
-    private Slider _soundsVolumeSlider;
+    private Slider musicVolumeSlider;
 
-	[SerializeField]
-	private TMP_Text _highscoreText;
+    [SerializeField]
+    private Slider soundsVolumeSlider;
 
-	private AudioManager _audioManager;
+    [SerializeField]
+    private TMP_Text highscoreText;
 
-	private void Awake()
+    private AudioManager audioManager;
+
+    private void Awake()
     {
         Instance = this;
     }
 
     private void Start()
     {
-		GameManager.Instance.LoadUsername();
-		GameManager.Instance.LoadHighscore();
+        // Ensure GameManager has loaded values
+        GameManager.Instance.LoadUsername();
+        GameManager.Instance.LoadHighscore();
         GameManager.Instance.LoadOptions();
-        UpdateSliderFromVolume();
-        _highscoreText.text = "Highscore: " + GameManager.Instance.Highscore;
 
-		_audioManager = GameObject.FindGameObjectWithTag("AudioManager").gameObject.GetComponent<AudioManager>();
+        // Cache AudioManager and initialize UI from current audio values
+        audioManager = AudioManager.Instance;
 
-		PlayMusic("menuMusic");
-	}
+        UpdateSlidersFromAudio();
+
+        if (highscoreText != null)
+        {
+            highscoreText.text = "Highscore: " + GameManager.Instance.Highscore;
+        }
+
+        // Start menu music if available
+        audioManager?.PlayMusic("menuMusic");
+    }
 
     public void StartGame()
     {
@@ -52,26 +62,26 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(string menuName)
     {
-        for (int i = 0; i < _menus.Length; i++)
+        for (int i = 0; i < menus.Length; i++)
         {
-            if (_menus[i].menuName == menuName)
+            if (menus[i].MenuName == menuName)
             {
-                _menus[i].Open();
+                menus[i].Open();
             }
-            else if (_menus[i].isOpen)
+            else if (menus[i].IsOpen)
             {
-                CloseMenu(_menus[i]);
+                CloseMenu(menus[i]);
             }
         }
     }
 
     public void OpenMenu(Menu menu)
     {
-        for (int i = 0; i < _menus.Length; i++)
+        for (int i = 0; i < menus.Length; i++)
         {
-            if (_menus[i].isOpen)
+            if (menus[i].IsOpen)
             {
-                CloseMenu(_menus[i]);
+                CloseMenu(menus[i]);
             }
         }
 
@@ -84,66 +94,78 @@ public class MenuManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Updated die Volumes von den Slidern
+    /// Updates AudioManager volumes from the slider values and applies them to the mixer.
+    /// Should be called by UI slider OnValueChanged events.
     /// </summary>
-    public void UpdateVolumeFromSlider()
+    public void UpdateVolumeFromSliders()
     {
-        AudioManager.Instance.masterVolume = _masterVolumeSlider.value;
-        AudioManager.Instance.musicVolume = _musicVolumeSlider.value;
-        AudioManager.Instance.soundsVolume = _soundsVolumeSlider.value;
-        AudioManager.Instance.SetVolumes();
+        if (audioManager == null)
+            audioManager = AudioManager.Instance;
+
+        if (audioManager == null) return;
+
+        audioManager.MasterVolume = masterVolumeSlider != null ? masterVolumeSlider.value : audioManager.MasterVolume;
+        audioManager.MusicVolume = musicVolumeSlider != null ? musicVolumeSlider.value : audioManager.MusicVolume;
+        audioManager.SoundsVolume = soundsVolumeSlider != null ? soundsVolumeSlider.value : audioManager.SoundsVolume;
+
+        audioManager.ApplyVolumes();
+
+        // Persist options whenever sliders change
+        GameManager.Instance.SaveOptions();
     }
 
     /// <summary>
-    /// Updated den Slider von den Volumes
+    /// Updates the sliders to reflect the current values in the AudioManager.
     /// </summary>
-    public void UpdateSliderFromVolume()
+    public void UpdateSlidersFromAudio()
     {
-        //Nur die erste Zeile wird ausgef?hrt. Nur wenn ich es davor in extra eigene Variablen abspeichere geht es
-        float masterVolume = 0;
-        float musicVolume = 0;
-        float soundVolume = 0;
+        if (audioManager == null)
+            audioManager = AudioManager.Instance;
 
-        masterVolume = AudioManager.Instance.masterVolume;
-        musicVolume = AudioManager.Instance.musicVolume;
-        soundVolume = AudioManager.Instance.soundsVolume;
+        if (audioManager == null) return;
 
-        _masterVolumeSlider.value = masterVolume;
-        _musicVolumeSlider.value = musicVolume;
-		_soundsVolumeSlider.value = soundVolume;
-	}
-	public void DeletePlayerPrefs()
-	{
+        if (masterVolumeSlider != null)
+            masterVolumeSlider.SetValueWithoutNotify(audioManager.MasterVolume);
 
-		PlayerPrefs.DeleteAll();
-	}
-	public void QuitGame()
-	{
-		Application.Quit();
-	}
+        if (musicVolumeSlider != null)
+            musicVolumeSlider.SetValueWithoutNotify(audioManager.MusicVolume);
 
-    public void OpenAGB()
+        if (soundsVolumeSlider != null)
+            soundsVolumeSlider.SetValueWithoutNotify(audioManager.SoundsVolume);
+    }
+
+    public void DeletePlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void OpenTerms()
     {
         Application.OpenURL("https://www.riftstonegames.com/TermsEULA_App_.html");
-	}
+    }
 
-	public void OpenPrivacyPolicy()
-	{
-		Application.OpenURL("https://www.riftstonegames.com/PrivacyPolicy_App_.html");
-	}
+    public void OpenPrivacyPolicy()
+    {
+        Application.OpenURL("https://www.riftstonegames.com/PrivacyPolicy_App_.html");
+    }
 
-	public void PlaySound(string soundName)
-	{
-		_audioManager.PlaySound(soundName);
-	}
+    public void PlaySound(string soundName)
+    {
+        audioManager?.PlaySound(soundName);
+    }
 
-	public void PlayMusic(string musicName)
-	{
-		_audioManager.PlayMusic(musicName);
-	}
+    public void PlayMusic(string musicName)
+    {
+        audioManager?.PlayMusic(musicName);
+    }
 
-	public void StopMusic(string musicName)
-	{
-		_audioManager.StopMusic(musicName);
-	}
+    public void StopMusic(string musicName)
+    {
+        audioManager?.StopMusic(musicName);
+    }
 }

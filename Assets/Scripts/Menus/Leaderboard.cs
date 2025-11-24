@@ -8,12 +8,21 @@ public class Leaderboard : MonoBehaviour
     [SerializeField] private List<TMP_Text> _nameList;
 	[SerializeField] private List<TMP_Text> _scoreList;
 
+    // Public leaderboard key used by the external LeaderboardCreator service
     private string _publicLeaderboardKey = "befb25a6bfb1784dcde5cb791e2ad5b862d485ecd38c8351c06cbb39144b556f";
 
 	private void Start()
 	{
-		GameManager.Instance.submitScoreEvent += SetLeaderboardEntry;
+        // Subscribe to the GameManager event that signals a new score submission
+        if (GameManager.Instance != null)
+            GameManager.Instance.SubmitScoreEvent += SetLeaderboardEntry;
 	}
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.SubmitScoreEvent -= SetLeaderboardEntry;
+    }
 
 	public void GetLeaderboard()
     {
@@ -30,19 +39,11 @@ public class Leaderboard : MonoBehaviour
 
 	public void SetLeaderboardEntry(string username, int score)
 	{
-        if(username == null) { return; }
+        if (string.IsNullOrEmpty(username)) return;
+
 		LeaderboardCreator.UploadNewEntry(_publicLeaderboardKey, username, score, ((msg) =>
         {
-            //if (System.Array.IndexOf(badwords, name) != -1) return;
             GetLeaderboard();
         }));
 	}
-
-    //public void DeleteLeaderboardEntry(string username)
-    //{
-    //    LeaderboardCreator.DeleteEntry(_publicLeaderboardKey, username, ((msg =>
-    //    {
-
-    //    })));
-    //}
 }

@@ -3240,9 +3240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Username: 
   Highscore: 0
-  enterNameField: {fileID: 2013290321}
-  _mainMenu: {fileID: 1784728434}
-  _enterNameMenu: {fileID: 2145454459}
+  EnterNameField: {fileID: 2013290321}
 --- !u!1 &887735347
 GameObject:
   m_ObjectHideFlags: 0
@@ -4049,7 +4047,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1176490641}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: UpdateVolumeFromSlider
+        m_MethodName: UpdateVolumeFromSliders
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4819,15 +4817,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66d3c52c525b14b4eba3654b39cf838a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _menus:
+  menus:
   - {fileID: 2145454461}
   - {fileID: 1784728438}
   - {fileID: 380633358}
   - {fileID: 688561549}
-  _masterVolumeSlider: {fileID: 1343652704}
-  _musicVolumeSlider: {fileID: 1013423574}
-  _soundsVolumeSlider: {fileID: 1746973498}
-  _highscoreText: {fileID: 555900119}
+  masterVolumeSlider: {fileID: 1343652704}
+  musicVolumeSlider: {fileID: 1013423574}
+  soundsVolumeSlider: {fileID: 1746973498}
+  highscoreText: {fileID: 555900119}
 --- !u!1 &1211185949
 GameObject:
   m_ObjectHideFlags: 0
@@ -5422,7 +5420,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1176490641}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: UpdateVolumeFromSlider
+        m_MethodName: UpdateVolumeFromSliders
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6966,7 +6964,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1176490641}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: UpdateVolumeFromSlider
+        m_MethodName: UpdateVolumeFromSliders
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7406,24 +7404,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9539c55a14e593429ee0bffe54c127d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicSounds:
-  - name: menuMusic
-    clip: {fileID: 8300000, guid: 8d2dfc7b5abea784782f7cdb4e4e8ebc, type: 3}
-  - name: gameMusic
-    clip: {fileID: 8300000, guid: 346b33c0f21541248a5237f2f0cd83f8, type: 3}
-  sfxSounds:
-  - name: button
-    clip: {fileID: 8300000, guid: ee470449093c69b4a9f1ca433b3c47fa, type: 3}
-  - name: collect
-    clip: {fileID: 8300000, guid: 67e931e8d21be114e885b9c5e2dc0952, type: 3}
-  - name: fail
-    clip: {fileID: 8300000, guid: c47b8e93992c01047bdf0a52f8821056, type: 3}
-  musicSource: {fileID: 1451056427}
-  sfxSource: {fileID: 134421959}
-  Master: {fileID: 24100000, guid: 5b1584046e8d05d448983c0e3bbe159e, type: 2}
-  masterVolume: 0
-  musicVolume: 0
-  soundsVolume: 0
+  MusicSounds:
+  - Name: gameMusic
+    Clip: {fileID: 8300000, guid: 346b33c0f21541248a5237f2f0cd83f8, type: 3}
+  - Name: menuMusic
+    Clip: {fileID: 8300000, guid: 8d2dfc7b5abea784782f7cdb4e4e8ebc, type: 3}
+  SfxSounds:
+  - Name: collect
+    Clip: {fileID: 8300000, guid: 67e931e8d21be114e885b9c5e2dc0952, type: 3}
+  - Name: button
+    Clip: {fileID: 8300000, guid: ee470449093c69b4a9f1ca433b3c47fa, type: 3}
+  - Name: fail
+    Clip: {fileID: 8300000, guid: c47b8e93992c01047bdf0a52f8821056, type: 3}
+  MusicSource: {fileID: 1451056427}
+  SfxSource: {fileID: 134421959}
+  masterMixer: {fileID: 24100000, guid: 5b1584046e8d05d448983c0e3bbe159e, type: 2}
+  MasterVolume: 1
+  MusicVolume: 1
+  SoundsVolume: 1
 --- !u!1 &1871003372
 GameObject:
   m_ObjectHideFlags: 0
