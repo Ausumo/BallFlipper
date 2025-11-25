@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Small helper representing an in-game menu. Keeps track of open state and
@@ -7,27 +8,29 @@ using UnityEngine;
 public class Menu : MonoBehaviour
 {
     [SerializeField]
-    private string menuName;
+    [FormerlySerializedAs("menuName")]
+    private string _menuName;
 
     [SerializeField]
-    private bool isOpen;
+    [FormerlySerializedAs("isOpen")]
+    private bool _isOpen;
 
     /// <summary>
     /// The assigned name of this menu (used by MenuManager to open/close by name).
     /// </summary>
-    public string MenuName => menuName;
+    public string MenuName => _menuName;
 
     /// <summary>
     /// Whether the menu is currently open.
     /// </summary>
-    public bool IsOpen => isOpen;
+    public bool IsOpen => _isOpen;
 
     /// <summary>
     /// Opens the menu and sets the internal state.
     /// </summary>
     public void Open()
     {
-        isOpen = true;
+        _isOpen = true;
         gameObject.SetActive(true);
     }
 
@@ -36,7 +39,7 @@ public class Menu : MonoBehaviour
     /// </summary>
     public void Close()
     {
-        isOpen = false;
+        _isOpen = false;
         gameObject.SetActive(false);
     }
 }

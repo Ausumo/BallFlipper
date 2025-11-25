@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.Serialization;
 
 
 public class LoseSceneControlls : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _scoreText;
+    [SerializeField]
+    [FormerlySerializedAs("_scoreText")]
+    private TMP_Text _scoreText;
 
 	[SerializeField]
+	[FormerlySerializedAs("_highscoreText")]
 	private TMP_Text _highscoreText;
 
 	private AudioManager _audioManager;

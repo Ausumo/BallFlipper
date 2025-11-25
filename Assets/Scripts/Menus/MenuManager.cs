@@ -2,6 +2,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Responsible for handling menu navigation and UI controls available in menus.
@@ -10,24 +11,29 @@ using TMPro;
 public class MenuManager : MonoBehaviour
 {
     [SerializeField]
-    private Menu[] menus;
+    [FormerlySerializedAs("menus")]
+    private Menu[] _menus;
 
     public static MenuManager Instance { get; private set; }
 
     [Header("Audio Sliders")]
     [SerializeField]
-    private Slider masterVolumeSlider;
+    [FormerlySerializedAs("masterVolumeSlider")]
+    private Slider _masterVolumeSlider;
 
     [SerializeField]
-    private Slider musicVolumeSlider;
+    [FormerlySerializedAs("musicVolumeSlider")]
+    private Slider _musicVolumeSlider;
 
     [SerializeField]
-    private Slider soundsVolumeSlider;
+    [FormerlySerializedAs("soundsVolumeSlider")]
+    private Slider _soundsVolumeSlider;
 
     [SerializeField]
-    private TMP_Text highscoreText;
+    [FormerlySerializedAs("highscoreText")]
+    private TMP_Text _highscoreText;
 
-    private AudioManager audioManager;
+    private AudioManager _audioManager;
 
     private void Awake()
     {
@@ -42,17 +48,17 @@ public class MenuManager : MonoBehaviour
         GameManager.Instance.LoadOptions();
 
         // Cache AudioManager and initialize UI from current audio values
-        audioManager = AudioManager.Instance;
+        _audioManager = AudioManager.Instance;
 
         UpdateSlidersFromAudio();
 
-        if (highscoreText != null)
+        if (_highscoreText != null)
         {
-            highscoreText.text = "Highscore: " + GameManager.Instance.Highscore;
+            _highscoreText.text = "Highscore: " + GameManager.Instance.Highscore;
         }
 
         // Start menu music if available
-        audioManager?.PlayMusic("menuMusic");
+        _audioManager?.PlayMusic("menuMusic");
     }
 
     public void StartGame()
@@ -62,26 +68,26 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(string menuName)
     {
-        for (int i = 0; i < menus.Length; i++)
+        for (int i = 0; i < _menus.Length; i++)
         {
-            if (menus[i].MenuName == menuName)
+            if (_menus[i].MenuName == menuName)
             {
-                menus[i].Open();
+                _menus[i].Open();
             }
-            else if (menus[i].IsOpen)
+            else if (_menus[i].IsOpen)
             {
-                CloseMenu(menus[i]);
+                CloseMenu(_menus[i]);
             }
         }
     }
 
     public void OpenMenu(Menu menu)
     {
-        for (int i = 0; i < menus.Length; i++)
+        for (int i = 0; i < _menus.Length; i++)
         {
-            if (menus[i].IsOpen)
+            if (_menus[i].IsOpen)
             {
-                CloseMenu(menus[i]);
+                CloseMenu(_menus[i]);
             }
         }
 
@@ -99,16 +105,16 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void UpdateVolumeFromSliders()
     {
-        if (audioManager == null)
-            audioManager = AudioManager.Instance;
+        if (_audioManager == null)
+            _audioManager = AudioManager.Instance;
 
-        if (audioManager == null) return;
+        if (_audioManager == null) return;
 
-        audioManager.MasterVolume = masterVolumeSlider != null ? masterVolumeSlider.value : audioManager.MasterVolume;
-        audioManager.MusicVolume = musicVolumeSlider != null ? musicVolumeSlider.value : audioManager.MusicVolume;
-        audioManager.SoundsVolume = soundsVolumeSlider != null ? soundsVolumeSlider.value : audioManager.SoundsVolume;
+        _audioManager.MasterVolume = _masterVolumeSlider != null ? _masterVolumeSlider.value : _audioManager.MasterVolume;
+        _audioManager.MusicVolume = _musicVolumeSlider != null ? _musicVolumeSlider.value : _audioManager.MusicVolume;
+        _audioManager.SoundsVolume = _soundsVolumeSlider != null ? _soundsVolumeSlider.value : _audioManager.SoundsVolume;
 
-        audioManager.ApplyVolumes();
+        _audioManager.ApplyVolumes();
 
         // Persist options whenever sliders change
         GameManager.Instance.SaveOptions();
@@ -119,19 +125,19 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void UpdateSlidersFromAudio()
     {
-        if (audioManager == null)
-            audioManager = AudioManager.Instance;
+        if (_audioManager == null)
+            _audioManager = AudioManager.Instance;
 
-        if (audioManager == null) return;
+        if (_audioManager == null) return;
 
-        if (masterVolumeSlider != null)
-            masterVolumeSlider.SetValueWithoutNotify(audioManager.MasterVolume);
+        if (_masterVolumeSlider != null)
+            _masterVolumeSlider.SetValueWithoutNotify(_audioManager.MasterVolume);
 
-        if (musicVolumeSlider != null)
-            musicVolumeSlider.SetValueWithoutNotify(audioManager.MusicVolume);
+        if (_musicVolumeSlider != null)
+            _musicVolumeSlider.SetValueWithoutNotify(_audioManager.MusicVolume);
 
-        if (soundsVolumeSlider != null)
-            soundsVolumeSlider.SetValueWithoutNotify(audioManager.SoundsVolume);
+        if (_soundsVolumeSlider != null)
+            _soundsVolumeSlider.SetValueWithoutNotify(_audioManager.SoundsVolume);
     }
 
     public void DeletePlayerPrefs()
@@ -156,16 +162,16 @@ public class MenuManager : MonoBehaviour
 
     public void PlaySound(string soundName)
     {
-        audioManager?.PlaySound(soundName);
+        _audioManager?.PlaySound(soundName);
     }
 
     public void PlayMusic(string musicName)
     {
-        audioManager?.PlayMusic(musicName);
+        _audioManager?.PlayMusic(musicName);
     }
 
     public void StopMusic(string musicName)
     {
-        audioManager?.StopMusic(musicName);
+        _audioManager?.StopMusic(musicName);
     }
 }
